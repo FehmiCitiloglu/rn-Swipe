@@ -104,16 +104,22 @@ const Deck = ({
           return (
             <Animated.View
               key={i}
-              style={[getCardStyle(), styles.cardStyle]}
+              style={[
+                getCardStyle(),
+                styles.cardStyle,
+                // {top: 10 * (i - index)},
+              ]}
               {...panResponder.panHandlers}>
               {renderCard(item)}
             </Animated.View>
           );
         }
         return (
-          <View style={styles.cardStyle} key={item.id}>
+          <Animated.View
+            style={[styles.cardStyle, {top: 10 * (i - index)}]}
+            key={item.id}>
             {renderCard(item)}
-          </View>
+          </Animated.View>
         );
       })
       .reverse();
@@ -125,8 +131,6 @@ export default Deck;
 
 const styles = StyleSheet.create({
   cardStyle: {
-    // flex: 1,
-    // justifyContent: 'center',
     position: 'absolute',
     width: SCREEN_WIDTH,
   },
