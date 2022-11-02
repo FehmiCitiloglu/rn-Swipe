@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {Image, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, View} from 'react-native';
 // import Ball from './src/Ball';
 import Deck from './src/Deck';
 import {Data} from './types/data-type';
@@ -67,9 +67,9 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <Deck data={DATA} renderCard={renderCard} />
-      </ScrollView>
+      {/* <ScrollView> */}
+      <Deck data={DATA} renderCard={renderCard} />
+      {/* </ScrollView> */}
     </SafeAreaView>
   );
 };

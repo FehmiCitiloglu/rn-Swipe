@@ -23,14 +23,22 @@ const Deck = ({
   ] = useState(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (e, gestureState) => {
+      onPanResponderMove: (_e, gestureState) => {
         // console.log('e', e);
         // console.log('gestureState', gestureState);
         position.setValue({x: gestureState.dx, y: gestureState.dy});
       },
-      onPanResponderRelease: (e, gestureState) => {},
+      onPanResponderRelease: (_e, _gestureState) => {},
     }),
   );
+
+  const getCardStyle = () => {
+    const rotate = position.x.interpolate({
+      inputRange: [-500, 0, 500],
+      outputRange: ['-120deg', '0deg', '120deg'],
+    });
+    return {...position.getLayout(), transform: [{rotate}]};
+  };
 
   const renderCards: () => ReactNode = () => {
     return data.map((item, index) => {
@@ -38,7 +46,7 @@ const Deck = ({
         return (
           <Animated.View
             key={index}
-            style={position.getLayout()}
+            style={getCardStyle()}
             {...panResponder.panHandlers}>
             {renderCard(item)}
           </Animated.View>
