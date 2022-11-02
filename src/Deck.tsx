@@ -3,6 +3,7 @@ import {Dimensions, PanResponder, View} from 'react-native';
 import {Data} from '../types/data-type';
 import {ReactNode} from 'react';
 import {Animated} from 'react-native';
+
 /**
  * Moving the card =>
  * 1 - User presses on screen
@@ -11,6 +12,7 @@ import {Animated} from 'react-native';
  */
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
+const SWIPE_OUT_DURATION = 250;
 
 const Deck = ({
   data,
@@ -27,13 +29,11 @@ const Deck = ({
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (_e, gestureState) => {
-        // console.log('e', e);
-        // console.log('gestureState', gestureState);
         position.setValue({x: gestureState.dx, y: gestureState.dy});
       },
       onPanResponderRelease: (_e, gestureState) => {
         if (gestureState.dx > SWIPE_THRESHOLD) {
-          console.log('swipe right');
+          forceSwipeRight();
         } else if (gestureState.dx < -SWIPE_THRESHOLD) {
           console.log('swipe left');
         } else {
@@ -42,6 +42,15 @@ const Deck = ({
       },
     }),
   );
+
+  function forceSwipeRight() {
+    // timing is the exact same effect with spring but with bouncing
+    Animated.timing(position, {
+      toValue: {x: SCREEN_WIDTH * 2, y: 0},
+      duration: SWIPE_OUT_DURATION,
+      useNativeDriver: false,
+    }).start();
+  }
 
   function resetPosition() {
     Animated.spring(position, {
