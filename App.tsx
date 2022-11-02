@@ -67,16 +67,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Deck
-        data={DATA}
-        renderCard={renderCard}
-        onSwipeLeft={item => {
-          console.log(item);
-        }}
-        onSwipeRight={item => {
-          console.log(item);
-        }}
-      />
+      <Deck data={DATA} renderCard={renderCard} />
     </SafeAreaView>
   );
 };

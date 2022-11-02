@@ -18,8 +18,8 @@ type Direction = 'left' | 'right';
 interface DeckProps {
   data: Data[];
   renderCard: (item: Data) => ReactNode;
-  onSwipeLeft: (item: Data) => void;
-  onSwipeRight: (item: Data) => void;
+  onSwipeLeft?: (item: Data) => void;
+  onSwipeRight?: (item: Data) => void;
 }
 
 const Deck = ({
@@ -57,7 +57,7 @@ const Deck = ({
 
     direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
     position.setValue({x: 0, y: 0});
-    setIndex(prevIndex => prevIndex++);
+    setIndex(prevIndex => (prevIndex += 1));
   };
 
   function forceSwipe(direction: Direction) {
@@ -89,11 +89,15 @@ const Deck = ({
   };
 
   const renderCards: () => ReactNode = () => {
-    return data.map((item, _index) => {
-      if (_index === 0) {
+    return data.map((item, i) => {
+      if (i < index) {
+        return null;
+      }
+
+      if (i === index) {
         return (
           <Animated.View
-            key={_index}
+            key={i}
             style={getCardStyle()}
             {...panResponder.panHandlers}>
             {renderCard(item)}
