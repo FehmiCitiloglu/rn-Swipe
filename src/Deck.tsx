@@ -20,6 +20,7 @@ interface DeckProps {
   renderCard: (item: Data) => ReactNode;
   onSwipeLeft?: (item: Data) => void;
   onSwipeRight?: (item: Data) => void;
+  renderNoMoreCards: () => ReactNode;
 }
 
 const Deck = ({
@@ -31,8 +32,9 @@ const Deck = ({
   onSwipeRight = () => {
     return null;
   },
+  renderNoMoreCards,
 }: DeckProps) => {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(8);
   const [position] = useState(new Animated.ValueXY());
   const [panResponder] = useState(
     PanResponder.create({
@@ -89,6 +91,9 @@ const Deck = ({
   };
 
   const renderCards: () => ReactNode = () => {
+    if (index >= data.length) {
+      return renderNoMoreCards();
+    }
     return data.map((item, i) => {
       if (i < index) {
         return null;
