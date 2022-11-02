@@ -67,9 +67,16 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <ScrollView> */}
-      <Deck data={DATA} renderCard={renderCard} />
-      {/* </ScrollView> */}
+      <Deck
+        data={DATA}
+        renderCard={renderCard}
+        onSwipeLeft={item => {
+          console.log(item);
+        }}
+        onSwipeRight={item => {
+          console.log(item);
+        }}
+      />
     </SafeAreaView>
   );
 };

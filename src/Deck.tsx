@@ -12,18 +12,29 @@ import {Animated} from 'react-native';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
+
+type Direction = 'left' | 'right';
+
+interface DeckProps {
+  data: Data[];
+  renderCard: (item: Data) => ReactNode;
+  onSwipeLeft: (item: Data) => void;
+  onSwipeRight: (item: Data) => void;
+}
+
 const Deck = ({
   data,
   renderCard,
-}: {
-  data: Data[];
-  renderCard: (item: Data) => ReactNode;
-}) => {
+  onSwipeLeft = () => {
+    return null;
+  },
+  onSwipeRight = () => {
+    return null;
+  },
+}: DeckProps) => {
+  const [index, setIndex] = useState(0);
   const [position] = useState(new Animated.ValueXY());
-  const [
-    panResponder,
-    // setPanResponder
-  ] = useState(
+  const [panResponder] = useState(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (_e, gestureState) => {
@@ -41,7 +52,15 @@ const Deck = ({
     }),
   );
 
-  function forceSwipe(direction: 'left' | 'right') {
+  const onSwipeComplete = (direction: Direction): void => {
+    const item = data[index];
+
+    direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
+    position.setValue({x: 0, y: 0});
+    setIndex(prevIndex => prevIndex++);
+  };
+
+  function forceSwipe(direction: Direction) {
     // timing is the exact same effect with spring but with bouncing
     const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
 
@@ -49,7 +68,9 @@ const Deck = ({
       toValue: {x, y: 0},
       duration: SWIPE_OUT_DURATION,
       useNativeDriver: false,
-    }).start();
+    }).start(() => {
+      onSwipeComplete(direction);
+    }); // this callback will be executed after the animation end
   }
 
   function resetPosition() {
@@ -68,11 +89,11 @@ const Deck = ({
   };
 
   const renderCards: () => ReactNode = () => {
-    return data.map((item, index) => {
-      if (index === 0) {
+    return data.map((item, _index) => {
+      if (_index === 0) {
         return (
           <Animated.View
-            key={index}
+            key={_index}
             style={getCardStyle()}
             {...panResponder.panHandlers}>
             {renderCard(item)}
