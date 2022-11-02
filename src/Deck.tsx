@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {PanResponder, View} from 'react-native';
+import {Dimensions, PanResponder, View} from 'react-native';
 import {Data} from '../types/data-type';
 import {ReactNode} from 'react';
 import {Animated} from 'react-native';
@@ -9,6 +9,8 @@ import {Animated} from 'react-native';
  * 2 - User drags finger (get dy dx info from gestureState)
  * 3 - Card Moves
  */
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
 const Deck = ({
   data,
   renderCard,
@@ -28,13 +30,22 @@ const Deck = ({
         // console.log('gestureState', gestureState);
         position.setValue({x: gestureState.dx, y: gestureState.dy});
       },
-      onPanResponderRelease: (_e, _gestureState) => {},
+      onPanResponderRelease: (_e, _gestureState) => {
+        resetPosition();
+      },
     }),
   );
 
+  function resetPosition() {
+    Animated.spring(position, {
+      toValue: {x: 0, y: 0},
+      useNativeDriver: false,
+    }).start();
+  }
+
   const getCardStyle = () => {
     const rotate = position.x.interpolate({
-      inputRange: [-500, 0, 500],
+      inputRange: [-SCREEN_WIDTH * 1.5, 0, SCREEN_WIDTH * 1.5],
       outputRange: ['-120deg', '0deg', '120deg'],
     });
     return {...position.getLayout(), transform: [{rotate}]};
