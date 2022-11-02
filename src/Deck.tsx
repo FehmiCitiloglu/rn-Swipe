@@ -10,6 +10,7 @@ import {Animated} from 'react-native';
  * 3 - Card Moves
  */
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 
 const Deck = ({
   data,
@@ -30,8 +31,14 @@ const Deck = ({
         // console.log('gestureState', gestureState);
         position.setValue({x: gestureState.dx, y: gestureState.dy});
       },
-      onPanResponderRelease: (_e, _gestureState) => {
-        resetPosition();
+      onPanResponderRelease: (_e, gestureState) => {
+        if (gestureState.dx > SWIPE_THRESHOLD) {
+          console.log('swipe right');
+        } else if (gestureState.dx < -SWIPE_THRESHOLD) {
+          console.log('swipe left');
+        } else {
+          resetPosition();
+        }
       },
     }),
   );
@@ -66,10 +73,6 @@ const Deck = ({
       return renderCard(item);
     });
   };
-  return (
-    // <Animated.View style={position.getLayout()} {...panResponder.panHandlers}>
-    // </Animated.View>
-    <View>{renderCards()}</View>
-  );
+  return <View>{renderCards()}</View>;
 };
 export default Deck;
