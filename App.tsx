@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   noMoreText: {
+    textAlign: 'center',
     marginBottom: 10,
   },
 });

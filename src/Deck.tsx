@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Dimensions, PanResponder, View} from 'react-native';
+import React, {ReactElement, useState} from 'react';
+import {Dimensions, PanResponder, View, StyleSheet} from 'react-native';
 import {Data} from '../types/data-type';
 import {ReactNode} from 'react';
 import {Animated} from 'react-native';
@@ -34,7 +34,7 @@ const Deck = ({
   },
   renderNoMoreCards,
 }: DeckProps) => {
-  const [index, setIndex] = useState(8);
+  const [index, setIndex] = useState(0);
   const [position] = useState(new Animated.ValueXY());
   const [panResponder] = useState(
     PanResponder.create({
@@ -90,28 +90,44 @@ const Deck = ({
     return {...position.getLayout(), transform: [{rotate}]};
   };
 
-  const renderCards: () => ReactNode = () => {
+  const renderCards: () => JSX.Element | (JSX.Element | null)[] = () => {
     if (index >= data.length) {
-      return renderNoMoreCards();
+      return <View>{renderNoMoreCards()}</View>;
     }
-    return data.map((item, i) => {
-      if (i < index) {
-        return null;
-      }
+    return data
+      .map((item, i) => {
+        if (i < index) {
+          return null;
+        }
 
-      if (i === index) {
+        if (i === index) {
+          return (
+            <Animated.View
+              key={i}
+              style={[getCardStyle(), styles.cardStyle]}
+              {...panResponder.panHandlers}>
+              {renderCard(item)}
+            </Animated.View>
+          );
+        }
         return (
-          <Animated.View
-            key={i}
-            style={getCardStyle()}
-            {...panResponder.panHandlers}>
+          <View style={styles.cardStyle} key={item.id}>
             {renderCard(item)}
-          </Animated.View>
+          </View>
         );
-      }
-      return renderCard(item);
-    });
+      })
+      .reverse();
   };
-  return <View>{renderCards()}</View>;
+
+  return renderCards() as ReactElement<any, any>;
 };
 export default Deck;
+
+const styles = StyleSheet.create({
+  cardStyle: {
+    // flex: 1,
+    // justifyContent: 'center',
+    position: 'absolute',
+    width: SCREEN_WIDTH,
+  },
+});
