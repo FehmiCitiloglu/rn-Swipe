@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, View} from 'react-native';
 // import Ball from './src/Ball';
 import Deck from './src/Deck';
 import {Data} from './types/data-type';
@@ -65,23 +65,9 @@ const App = () => {
     );
   };
 
-  const renderNoMoreCards = () => {
-    return (
-      <Card>
-        <Card.Title>All Done</Card.Title>
-        <Text style={styles.noMoreText}>No More Content Here</Text>
-        <Button title={'Get More'} buttonStyle={styles.buttonStyle} />
-      </Card>
-    );
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      <Deck
-        data={DATA}
-        renderCard={renderCard}
-        renderNoMoreCards={renderNoMoreCards}
-      />
+      <Deck data={DATA} renderCard={renderCard} />
     </SafeAreaView>
   );
 };
@@ -102,9 +88,5 @@ const styles = StyleSheet.create({
   },
   imageStyle: {
     flex: 1,
-  },
-  noMoreText: {
-    textAlign: 'center',
-    marginBottom: 10,
   },
 });

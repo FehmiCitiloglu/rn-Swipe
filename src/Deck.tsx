@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import {Data} from '../types/data-type';
 import {ReactNode} from 'react';
-import {Animated} from 'react-native';
+import {Animated, Text} from 'react-native';
+import {Card, Button} from '@rneui/themed';
 /**
  * Moving the card =>
  * 1 - User presses on screen
@@ -27,7 +28,6 @@ interface DeckProps {
   renderCard: (item: Data) => ReactNode;
   onSwipeLeft?: (item: Data) => void;
   onSwipeRight?: (item: Data) => void;
-  renderNoMoreCards: () => ReactNode;
 }
 
 const Deck = ({
@@ -39,7 +39,6 @@ const Deck = ({
   onSwipeRight = () => {
     return null;
   },
-  renderNoMoreCards,
 }: DeckProps) => {
   const [index, setIndex] = useState(0);
   const [position] = useState(new Animated.ValueXY());
@@ -104,6 +103,20 @@ const Deck = ({
     return {...position.getLayout(), transform: [{rotate}]};
   };
 
+  const renderNoMoreCards = () => {
+    return (
+      <Card>
+        <Card.Title>All Done</Card.Title>
+        <Text style={styles.noMoreText}>No More Content Here</Text>
+        <Button
+          title={'Get More'}
+          buttonStyle={styles.buttonStyle}
+          onPress={() => setIndex(0)}
+        />
+      </Card>
+    );
+  };
+
   const renderCards: () => JSX.Element | (JSX.Element | null)[] = () => {
     if (index >= data.length) {
       return <View>{renderNoMoreCards()}</View>;
@@ -147,5 +160,12 @@ const styles = StyleSheet.create({
   cardStyle: {
     position: 'absolute',
     width: SCREEN_WIDTH,
+  },
+  buttonStyle: {
+    backgroundColor: '#03A9F4',
+  },
+  noMoreText: {
+    textAlign: 'center',
+    marginBottom: 10,
   },
 });
