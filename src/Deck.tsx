@@ -1,5 +1,12 @@
-import React, {ReactElement, useState} from 'react';
-import {Dimensions, PanResponder, View, StyleSheet} from 'react-native';
+import React, {ReactElement, useEffect, useState} from 'react';
+import {
+  Dimensions,
+  PanResponder,
+  View,
+  StyleSheet,
+  UIManager,
+  LayoutAnimation,
+} from 'react-native';
 import {Data} from '../types/data-type';
 import {ReactNode} from 'react';
 import {Animated} from 'react-native';
@@ -53,6 +60,13 @@ const Deck = ({
       },
     }),
   );
+
+  useEffect(() => {
+    UIManager.setLayoutAnimationEnabledExperimental &&
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+
+    LayoutAnimation.spring();
+  }, []);
 
   const onSwipeComplete = (direction: Direction): void => {
     const item = data[index];
